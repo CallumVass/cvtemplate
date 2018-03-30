@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using cvtemplate.Data;
 using MediatR;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -41,17 +42,18 @@ namespace cvtemplate
             });
 
             services.AddMvc(opts =>
-            {
-                var policy = new AuthorizationPolicyBuilder()
-                                       .RequireAuthenticatedUser()
-                                       .Build();
-                opts.Filters.Add(new AuthorizeFilter(policy));
-            })
+                    {
+                        var policy = new AuthorizationPolicyBuilder()
+                                            .RequireAuthenticatedUser()
+                                            .Build();
+                        opts.Filters.Add(new AuthorizeFilter(policy));
+                    })
+                    .AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Startup>(); })
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                     .AddFeatureFolders();
 
-            services.AddAutoMapper();
 
+            services.AddAutoMapper();
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                     .AddDefaultTokenProviders();
