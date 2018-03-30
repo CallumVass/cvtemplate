@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using cvtemplate.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace cvtemplate.Features.Home

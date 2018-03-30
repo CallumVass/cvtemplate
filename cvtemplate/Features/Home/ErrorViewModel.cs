@@ -1,6 +1,6 @@
 using System;
 
-namespace cvtemplate.Models
+namespace cvtemplate
 {
     public class ErrorViewModel
     {
