@@ -11,7 +11,7 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.2.0"/>
   </ItemGroup>
 
-    <ItemGroup>
+  <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="2.0.1"/>
   </ItemGroup>
 </Project>
