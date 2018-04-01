@@ -1,20 +1,31 @@
 using System;
+using System.Threading.Tasks;
+using cvtemplate.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace cvtemplate
 {
     public class LiteDbConfiguration
     {
-        private ServiceProvider serviceProvider;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public LiteDbConfiguration(ServiceProvider serviceProvider)
+        public LiteDbConfiguration(UserManager<ApplicationUser> userManager)
         {
-            this.serviceProvider = serviceProvider;
+            this.userManager = userManager;
         }
 
-        public void Build()
+        public void Init()
         {
-
+            // Add a user
+            string user = "callum.vass@gmail.com";
+            string password = "qwerty123!";
+            Task.FromResult(this.userManager.CreateAsync(new ApplicationUser
+            {
+                UserName = user,
+                Email = user,
+                EmailConfirmed = true
+            }, password));
         }
     }
 }

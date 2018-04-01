@@ -87,14 +87,16 @@ namespace cvtemplate
 
             // Implement your own services here..
             var db = Path.Combine(Directory.GetCurrentDirectory(), "litedb.db");
+
             services.AddSingleton<IUserRepository>(e => new LiteDbUserRepository(db));
+            services.AddSingleton<LiteDbConfiguration>();
 
             var serviceProvider = services.BuildServiceProvider();
 
             // Configure LiteDb.. This can be removed in most cases
             // but it showcases how you can do start-up tasks such as seeding data
             // or specific configuration data..
-            new LiteDbConfiguration(serviceProvider).Build();
+            serviceProvider.GetService<LiteDbConfiguration>().Init();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
