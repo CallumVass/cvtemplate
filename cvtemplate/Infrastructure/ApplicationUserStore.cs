@@ -7,69 +7,81 @@ namespace cvtemplate.Infrastructure
 {
     public class ApplicationUserStore : IUserStore<ApplicationUser>
     {
-        private readonly IDataAccess dataAccess;
-        public ApplicationUserStore(IDataAccess dataAccess)
+        private readonly IUserRepository userRepository;
+        public ApplicationUserStore(IUserRepository userRepository)
         {
-            this.dataAccess = dataAccess;
+            this.userRepository = userRepository;
         }
 
         public async Task<IdentityResult> CreateAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
-            var result = await this.dataAccess.CreateUser(user);
+            var result = await this.userRepository.Create(user);
 
             return result > 0
                 ? IdentityResult.Success
                 : IdentityResult.Failed(new IdentityError() { Description = "Failed to create user" });
         }
 
-        public Task<IdentityResult> DeleteAsync(ApplicationUser user, CancellationToken cancellationToken)
+        public async Task<IdentityResult> DeleteAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            var result = await this.userRepository.Delete(user);
+
+            return result > 0
+                ? IdentityResult.Success
+                : IdentityResult.Failed(new IdentityError() { Description = "Failed to delete user" });
+        }
+
+        public async Task<ApplicationUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
+        {
+            var result = await this.userRepository.FindById(userId);
+
+            return result;
+        }
+
+        public async Task<ApplicationUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        {
+            var result = await this.userRepository.FindByName(normalizedUserName);
+
+            return result;
+        }
+
+        public async Task<string> GetNormalizedUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            return await Task.FromResult(user.NormalizedUserName);
+        }
+
+        public async Task<string> GetUserIdAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            return await Task.FromResult(user.Id);
+        }
+
+        public async Task<string> GetUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            return await Task.FromResult(user.UserName);
+        }
+
+        public async Task SetNormalizedUserNameAsync(ApplicationUser user, string normalizedName, CancellationToken cancellationToken)
+        {
+            await this.userRepository.SetNormalizedUserName(user, normalizedName);
+        }
+
+        public async Task SetUserNameAsync(ApplicationUser user, string userName, CancellationToken cancellationToken)
+        {
+            await this.userRepository.SetUserName(user, userName);
+        }
+
+        public async Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            var result = await this.userRepository.Update(user);
+
+            return result
+                ? IdentityResult.Success
+                : IdentityResult.Failed(new IdentityError() { Description = "Failed to update user" });
         }
 
         public void Dispose()
         {
-            throw new System.NotImplementedException();
-        }
 
-        public Task<ApplicationUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<ApplicationUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<string> GetNormalizedUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<string> GetUserIdAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<string> GetUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task SetNormalizedUserNameAsync(ApplicationUser user, string normalizedName, CancellationToken cancellationToken)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task SetUserNameAsync(ApplicationUser user, string userName, CancellationToken cancellationToken)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }
