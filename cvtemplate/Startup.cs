@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using cvtemplate.Data;
 using MediatR;
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using cvtemplate.Infrastructure;
+using System.IO;
 
 namespace cvtemplate
 {
@@ -88,6 +84,17 @@ namespace cvtemplate
                 options.AccessDeniedPath = "/AccessDenied";
                 options.SlidingExpiration = true;
             });
+
+            // Implement your own services here..
+            var db = Path.Combine(Directory.GetCurrentDirectory(), "litedb.db");
+            services.AddSingleton<IUserRepository>(e => new LiteDbUserRepository(db));
+
+            var serviceProvider = services.BuildServiceProvider();
+
+            // Configure LiteDb.. This can be removed in most cases
+            // but it showcases how you can do start-up tasks such as seeding data
+            // or specific configuration data..
+            new LiteDbConfiguration(serviceProvider).Build();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
