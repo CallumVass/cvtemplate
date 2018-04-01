@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using cvtemplate.Infrastructure;
 
 namespace cvtemplate
 {
@@ -56,6 +57,7 @@ namespace cvtemplate
             services.AddAutoMapper();
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
+                    .AddUserStore<ApplicationUserStore>()
                     .AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
