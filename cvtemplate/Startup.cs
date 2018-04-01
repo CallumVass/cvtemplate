@@ -81,9 +81,9 @@ namespace cvtemplate
             {
                 // Cookie settings
                 options.Cookie.Expiration = TimeSpan.FromHours(1);
-                options.LoginPath = "/Account/Login";
-                options.LogoutPath = "/Account/Logout";
-                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.LoginPath = "/Login";
+                options.LogoutPath = "/Logout";
+                options.AccessDeniedPath = "/AccessDenied";
                 options.SlidingExpiration = true;
             });
         }

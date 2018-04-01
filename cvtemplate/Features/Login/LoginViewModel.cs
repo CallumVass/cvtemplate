@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace cvtemplate.Features.Account
+namespace cvtemplate.Features.Login
 {
     public class LoginViewModel
     {
