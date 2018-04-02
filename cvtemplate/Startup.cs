@@ -89,8 +89,8 @@ namespace cvtemplate
             // Implement your own services here..
             var db = Path.Combine(Directory.GetCurrentDirectory(), "litedb.db");
 
-            services.AddTransient<IUserStore<ApplicationUser>, ApplicationUserStore>();
-            services.AddTransient<IRoleStore<IdentityRole>, ApplicationRoleStore>();
+            services.AddScoped<IUserStore<ApplicationUser>, ApplicationUserStore>();
+            services.AddScoped<IRoleStore<IdentityRole>, ApplicationRoleStore>();
             services.AddSingleton<IUserRepository>(e => new LiteDbUserRepository(db));
             services.AddSingleton<LiteDbConfiguration>();
 
