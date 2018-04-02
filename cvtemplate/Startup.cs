@@ -54,6 +54,7 @@ namespace cvtemplate
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                     .AddUserStore<ApplicationUserStore>()
+                    .AddRoleStore<ApplicationRoleStore>()
                     .AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
@@ -89,6 +90,7 @@ namespace cvtemplate
             var db = Path.Combine(Directory.GetCurrentDirectory(), "litedb.db");
 
             services.AddTransient<IUserStore<ApplicationUser>, ApplicationUserStore>();
+            services.AddTransient<IRoleStore<IdentityRole>, ApplicationRoleStore>();
             services.AddSingleton<IUserRepository>(e => new LiteDbUserRepository(db));
             services.AddSingleton<LiteDbConfiguration>();
 
