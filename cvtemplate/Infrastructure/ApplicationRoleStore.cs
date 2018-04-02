@@ -1,65 +1,79 @@
 using System.Threading;
 using System.Threading.Tasks;
+using cvtemplate.Data;
 using Microsoft.AspNetCore.Identity;
 
 namespace cvtemplate.Infrastructure
 {
-    public class ApplicationRoleStore : IRoleStore<IdentityRole>
+    public class ApplicationRoleStore : IRoleStore<ApplicationRole>
     {
-        public Task<IdentityResult> CreateAsync(IdentityRole role, CancellationToken cancellationToken)
+        private readonly IRoleRepository roleRepository;
+
+        public ApplicationRoleStore(IRoleRepository roleRepository)
         {
-            throw new System.NotImplementedException();
-
-            // var result = await this.roleRepository.Create(role);
-
-            // return !string.IsNullOrEmpty(result)
-            //         ? IdentityResult.Success
-            //         : IdentityResult.Failed(new IdentityError { Description = "Failed to create role" });
+            this.roleRepository = roleRepository;
         }
 
-        public Task<IdentityResult> DeleteAsync(IdentityRole role, CancellationToken cancellationToken)
+        public async Task<IdentityResult> CreateAsync(ApplicationRole role, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            var result = await this.roleRepository.Create(role);
+
+            return !string.IsNullOrEmpty(result)
+                    ? IdentityResult.Success
+                    : IdentityResult.Failed(new IdentityError { Description = "Failed to create role" });
         }
 
-        public Task<IdentityRole> FindByIdAsync(string roleId, CancellationToken cancellationToken)
+        public async Task<IdentityResult> DeleteAsync(ApplicationRole role, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            var result = await this.roleRepository.Delete(role);
+
+            return result > 0
+                    ? IdentityResult.Success
+                    : IdentityResult.Failed(new IdentityError { Description = "Failed to delete role" });
         }
 
-        public Task<IdentityRole> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
+        public async Task<ApplicationRole> FindByIdAsync(string roleId, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return await this.roleRepository.FindById(roleId);
         }
 
-        public Task<string> GetNormalizedRoleNameAsync(IdentityRole role, CancellationToken cancellationToken)
+        public async Task<ApplicationRole> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return await this.roleRepository.FindByName(normalizedRoleName);
         }
 
-        public Task<string> GetRoleIdAsync(IdentityRole role, CancellationToken cancellationToken)
+        public async Task<string> GetNormalizedRoleNameAsync(ApplicationRole role, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return await Task.FromResult(role.NormalizedName);
         }
 
-        public Task<string> GetRoleNameAsync(IdentityRole role, CancellationToken cancellationToken)
+        public async Task<string> GetRoleIdAsync(ApplicationRole role, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return await Task.FromResult(role.Id);
         }
 
-        public Task SetNormalizedRoleNameAsync(IdentityRole role, string normalizedName, CancellationToken cancellationToken)
+        public async Task<string> GetRoleNameAsync(ApplicationRole role, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return await Task.FromResult(role.Name);
         }
 
-        public Task SetRoleNameAsync(IdentityRole role, string roleName, CancellationToken cancellationToken)
+        public async Task SetNormalizedRoleNameAsync(ApplicationRole role, string normalizedName, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            await this.roleRepository.SetNormalizedRoleName(role, normalizedName);
         }
 
-        public Task<IdentityResult> UpdateAsync(IdentityRole role, CancellationToken cancellationToken)
+        public async Task SetRoleNameAsync(ApplicationRole role, string roleName, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            await this.roleRepository.SetRoleName(role, roleName);
+        }
+
+        public async Task<IdentityResult> UpdateAsync(ApplicationRole role, CancellationToken cancellationToken)
+        {
+            var result = await this.roleRepository.Update(role);
+
+            return result
+                    ? IdentityResult.Success
+                    : IdentityResult.Failed(new IdentityError { Description = "Failed to update role" });
         }
 
         public void Dispose()

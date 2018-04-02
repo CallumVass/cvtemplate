@@ -52,7 +52,7 @@ namespace cvtemplate
 
             services.AddAutoMapper();
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
                     .AddUserStore<ApplicationUserStore>()
                     .AddRoleStore<ApplicationRoleStore>()
                     .AddDefaultTokenProviders();
@@ -90,7 +90,7 @@ namespace cvtemplate
             var db = Path.Combine(Directory.GetCurrentDirectory(), "litedb.db");
 
             services.AddScoped<IUserStore<ApplicationUser>, ApplicationUserStore>();
-            services.AddScoped<IRoleStore<IdentityRole>, ApplicationRoleStore>();
+            services.AddScoped<IRoleStore<ApplicationRole>, ApplicationRoleStore>();
             services.AddSingleton<IUserRepository>(e => new LiteDbUserRepository(db));
             services.AddSingleton<LiteDbConfiguration>();
 
