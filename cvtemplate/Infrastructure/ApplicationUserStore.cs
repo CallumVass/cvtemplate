@@ -5,7 +5,10 @@ using Microsoft.AspNetCore.Identity;
 
 namespace cvtemplate.Infrastructure
 {
-    public class ApplicationUserStore : IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>
+    public class ApplicationUserStore
+        : IUserStore<ApplicationUser>,
+            IUserPasswordStore<ApplicationUser>,
+            IUserEmailStore<ApplicationUser>
     {
         private readonly IUserRepository userRepository;
         public ApplicationUserStore(IUserRepository userRepository)
@@ -17,7 +20,7 @@ namespace cvtemplate.Infrastructure
         {
             var result = await this.userRepository.Create(user);
 
-            return result > 0
+            return !string.IsNullOrEmpty(result)
                 ? IdentityResult.Success
                 : IdentityResult.Failed(new IdentityError() { Description = "Failed to create user" });
         }
@@ -84,14 +87,49 @@ namespace cvtemplate.Infrastructure
             await this.userRepository.SetPasswordHash(user, passwordHash);
         }
 
-        public Task<string> GetPasswordHashAsync(ApplicationUser user, CancellationToken cancellationToken)
+        public async Task<string> GetPasswordHashAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(user.PasswordHash);
+            return await Task.FromResult(user.PasswordHash);
         }
 
-        public Task<bool> HasPasswordAsync(ApplicationUser user, CancellationToken cancellationToken)
+        public async Task<bool> HasPasswordAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(!string.IsNullOrEmpty(user.PasswordHash));
+            return await Task.FromResult(!string.IsNullOrEmpty(user.PasswordHash));
+        }
+
+        public async Task SetEmailAsync(ApplicationUser user, string email, CancellationToken cancellationToken)
+        {
+            await this.userRepository.SetEmail(user, email);
+        }
+
+        public async Task<string> GetEmailAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            return await Task.FromResult(user.Email);
+        }
+
+        public async Task<bool> GetEmailConfirmedAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            return await Task.FromResult(user.EmailConfirmed);
+        }
+
+        public async Task SetEmailConfirmedAsync(ApplicationUser user, bool confirmed, CancellationToken cancellationToken)
+        {
+            await this.userRepository.SetEmailConfirmed(user, confirmed);
+        }
+
+        public async Task<ApplicationUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        {
+            return await this.userRepository.FindByEmail(normalizedEmail);
+        }
+
+        public async Task<string> GetNormalizedEmailAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            return await Task.FromResult(user.NormalizedEmail);
+        }
+
+        public async Task SetNormalizedEmailAsync(ApplicationUser user, string normalizedEmail, CancellationToken cancellationToken)
+        {
+            await this.userRepository.SetNormalizedEmail(user, normalizedEmail);
         }
 
         public void Dispose()

@@ -6,89 +6,84 @@ namespace cvtemplate.Infrastructure
 {
     public class LiteDbUserRepository : IUserRepository
     {
-        private readonly string connectionString;
+        private readonly LiteRepository db;
 
         public LiteDbUserRepository(string connectionString)
         {
-            this.connectionString = connectionString;
+            this.db = new LiteRepository(connectionString);
         }
 
-        public async Task<int> Create(ApplicationUser user)
+        public async Task<string> Create(ApplicationUser user)
         {
-            using (var db = new LiteRepository(this.connectionString))
-            {
-                return await Task.FromResult(db.Insert(user));
-            }
+            var rows = db.Insert(user);
+            return await Task.FromResult(rows.AsString);
         }
 
         public async Task<int> Delete(ApplicationUser user)
         {
-            using (var db = new LiteRepository(this.connectionString))
-            {
-                return await Task.FromResult(db.Delete<ApplicationUser>(e => e.Id == user.Id));
-            }
+            return await Task.FromResult(db.Delete<ApplicationUser>(e => e.Id == user.Id));
+        }
+
+        public async Task<ApplicationUser> FindByEmail(string normalizedEmail)
+        {
+            return await Task.FromResult(db.Query<ApplicationUser>()
+                                            .Where(e => e.NormalizedEmail == normalizedEmail)
+                                            .FirstOrDefault());
         }
 
         public async Task<ApplicationUser> FindById(string userId)
         {
-            using (var db = new LiteRepository(this.connectionString))
-            {
-                return await Task.FromResult(db.Query<ApplicationUser>()
-                                                .Where(e => e.Id == userId)
-                                                .FirstOrDefault());
-            }
+            return await Task.FromResult(db.Query<ApplicationUser>()
+                                            .Where(e => e.Id == userId)
+                                            .FirstOrDefault());
         }
 
         public async Task<ApplicationUser> FindByName(string normalizedUserName)
         {
-            using (var db = new LiteRepository(this.connectionString))
-            {
-                return await Task.FromResult(db.Query<ApplicationUser>()
-                                                .Where(e => e.NormalizedUserName == normalizedUserName)
-                                                .FirstOrDefault());
-            }
+            return await Task.FromResult(db.Query<ApplicationUser>()
+                                            .Where(e => e.NormalizedUserName == normalizedUserName)
+                                               .FirstOrDefault());
+        }
+
+        public async Task SetEmail(ApplicationUser user, string email)
+        {
+            user.Email = email;
+            await Task.FromResult(db.Update(user));
+        }
+
+        public async Task SetEmailConfirmed(ApplicationUser user, bool confirmed)
+        {
+            user.EmailConfirmed = confirmed;
+            await Task.FromResult(db.Update(user));
+        }
+
+        public async Task SetNormalizedEmail(ApplicationUser user, string normalizedEmail)
+        {
+            user.NormalizedEmail = normalizedEmail;
+            await Task.FromResult(db.Update(user));
         }
 
         public async Task SetNormalizedUserName(ApplicationUser user, string normalizedName)
         {
-            using (var db = new LiteRepository(this.connectionString))
-            {
-                var dbUser = await this.FindById(user.Id);
-                dbUser.NormalizedUserName = normalizedName;
-                db.Update(dbUser);
-            }
+            user.NormalizedUserName = normalizedName;
+            await Task.FromResult(db.Update(user));
         }
 
         public async Task SetPasswordHash(ApplicationUser user, string passwordHash)
         {
-            using (var db = new LiteRepository(this.connectionString))
-            {
-                var dbUser = await this.FindById(user.Id);
-                if (dbUser == null)
-                {
-                    await this.Create(user);
-                }
-                dbUser.PasswordHash = passwordHash;
-                db.Update(dbUser);
-            }
+            user.PasswordHash = passwordHash;
+            await Task.FromResult(db.Update(user));
         }
 
         public async Task SetUserName(ApplicationUser user, string userName)
         {
-            using (var db = new LiteRepository(this.connectionString))
-            {
-                var dbUser = await this.FindById(user.Id);
-                dbUser.UserName = userName;
-                db.Update(dbUser);
-            }
+            user.UserName = userName;
+            await Task.FromResult(db.Update(user));
         }
 
         public async Task<bool> Update(ApplicationUser user)
         {
-            using (var db = new LiteRepository(this.connectionString))
-            {
-                return await Task.FromResult(db.Update(user));
-            }
+            return await Task.FromResult(db.Update(user));
         }
     }
 }
