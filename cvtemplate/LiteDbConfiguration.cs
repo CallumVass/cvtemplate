@@ -1,6 +1,7 @@
-using System;
 using System.Threading.Tasks;
 using cvtemplate.Data;
+using cvtemplate.Infrastructure;
+using LiteDB;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,15 +18,20 @@ namespace cvtemplate
 
         public void Init()
         {
+            // var mapper = BsonMapper.Global;
+
+            // mapper.Entity<ApplicationUser>()
+            //     .Id(e => e.Id);
+
             // Add a user
             string user = "callum.vass@gmail.com";
-            string password = "qwerty123!";
-            Task.FromResult(this.userManager.CreateAsync(new ApplicationUser
+            string password = "Qwerty123!";
+            this.userManager.CreateAsync(new ApplicationUser
             {
                 UserName = user,
                 Email = user,
                 EmailConfirmed = true
-            }, password));
+            }, password).Wait();
         }
     }
 }

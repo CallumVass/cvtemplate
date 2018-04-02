@@ -12,5 +12,6 @@ namespace cvtemplate.Infrastructure
         Task<ApplicationUser> FindById(string userId);
         Task<int> Delete(ApplicationUser user);
         Task<int> Create(ApplicationUser user);
+        Task SetPasswordHash(ApplicationUser user, string passwordHash);
     }
 }

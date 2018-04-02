@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace cvtemplate.Infrastructure
 {
-    public class ApplicationUserStore : IUserStore<ApplicationUser>
+    public class ApplicationUserStore : IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>
     {
         private readonly IUserRepository userRepository;
         public ApplicationUserStore(IUserRepository userRepository)
@@ -77,6 +77,21 @@ namespace cvtemplate.Infrastructure
             return result
                 ? IdentityResult.Success
                 : IdentityResult.Failed(new IdentityError() { Description = "Failed to update user" });
+        }
+
+        public async Task SetPasswordHashAsync(ApplicationUser user, string passwordHash, CancellationToken cancellationToken)
+        {
+            await this.userRepository.SetPasswordHash(user, passwordHash);
+        }
+
+        public Task<string> GetPasswordHashAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.PasswordHash);
+        }
+
+        public Task<bool> HasPasswordAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(!string.IsNullOrEmpty(user.PasswordHash));
         }
 
         public void Dispose()

@@ -59,6 +59,20 @@ namespace cvtemplate.Infrastructure
             }
         }
 
+        public async Task SetPasswordHash(ApplicationUser user, string passwordHash)
+        {
+            using (var db = new LiteRepository(this.connectionString))
+            {
+                var dbUser = await this.FindById(user.Id);
+                if (dbUser == null)
+                {
+                    await this.Create(user);
+                }
+                dbUser.PasswordHash = passwordHash;
+                db.Update(dbUser);
+            }
+        }
+
         public async Task SetUserName(ApplicationUser user, string userName)
         {
             using (var db = new LiteRepository(this.connectionString))
