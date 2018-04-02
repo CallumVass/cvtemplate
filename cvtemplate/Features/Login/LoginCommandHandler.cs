@@ -1,19 +1,22 @@
 using System.Threading;
 using System.Threading.Tasks;
+using cvtemplate.Data;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 
 namespace cvtemplate.Features.Login
 {
     public class LoginCommandHandler : IRequestHandler<LoginCommand>
     {
-        public LoginCommandHandler()
+        private readonly SignInManager<ApplicationUser> signInManager;
+        public LoginCommandHandler(SignInManager<ApplicationUser> signInManager)
         {
-
+            this.signInManager = signInManager;
         }
 
-        public Task Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            await this.signInManager.PasswordSignInAsync(request.Email, request.Password, true, lockoutOnFailure: false);
         }
     }
 }

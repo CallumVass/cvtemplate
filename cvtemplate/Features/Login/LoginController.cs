@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,9 +20,10 @@ namespace cvtemplate.Features.Login
         }
 
         [HttpPost]
-        public IActionResult Index(LoginCommand command)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(LoginCommand command)
         {
-            this.mediator.Send(command);
+            await this.mediator.Send(command);
             return RedirectToAction("Index", "Home");
         }
     }
