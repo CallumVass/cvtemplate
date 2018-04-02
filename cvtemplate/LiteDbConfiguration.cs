@@ -21,7 +21,8 @@ namespace cvtemplate
             string email = "callum.vass@gmail.com";
             string password = "Qwerty123!";
 
-            var user = this.userRepository.FindByEmail(email).Result;
+            var normalizedEmail = this.userManager.NormalizeKey(email);
+            var user = this.userRepository.FindByEmail(normalizedEmail).Result;
 
             if (user == null)
             {
