@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using cvtemplate.Infrastructure;
 using System.IO;
+using LiteDB;
 
 namespace cvtemplate
 {
@@ -45,7 +46,8 @@ namespace cvtemplate
                                             .Build();
                         opts.Filters.Add(new AuthorizeFilter(policy));
                     })
-                    .AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Startup>(); })
+                    // Fluent Validation doesn't work on 2.1 yet..
+                    //.AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Startup>(); })
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                     .AddFeatureFolders();
 
@@ -91,7 +93,9 @@ namespace cvtemplate
 
             services.AddScoped<IUserStore<ApplicationUser>, ApplicationUserStore>();
             services.AddScoped<IRoleStore<ApplicationRole>, ApplicationRoleStore>();
-            services.AddSingleton<IUserRepository>(e => new LiteDbUserRepository(db));
+            services.AddScoped<IUserRepository, LiteDbUserRepository>();
+            services.AddScoped<IRoleRepository, LiteDbRoleRepository>();
+            services.AddSingleton<LiteRepository>(_ => new LiteRepository(db));
             services.AddSingleton<LiteDbConfiguration>();
 
             var serviceProvider = services.BuildServiceProvider();

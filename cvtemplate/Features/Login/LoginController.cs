@@ -23,8 +23,13 @@ namespace cvtemplate.Features.Login
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(LoginCommand command)
         {
-            await this.mediator.Send(command);
-            return RedirectToAction("Index", "Home");
+            if (ModelState.IsValid)
+            {
+                await this.mediator.Send(command);
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(command);
         }
     }
 }

@@ -9,9 +9,9 @@ namespace cvtemplate.Infrastructure
     {
         private readonly LiteRepository db;
 
-        public LiteDbRoleRepository(string connectionString)
+        public LiteDbRoleRepository(LiteRepository repository)
         {
-            this.db = new LiteRepository(connectionString);
+            this.db = repository;
         }
 
         public async Task<string> Create(ApplicationRole role)
