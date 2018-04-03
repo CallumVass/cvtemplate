@@ -20,7 +20,6 @@ namespace cvtemplate.Features.Login
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(LoginCommand command)
         {
             if (ModelState.IsValid)

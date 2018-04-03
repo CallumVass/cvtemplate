@@ -45,6 +45,7 @@ namespace cvtemplate
                                             .RequireAuthenticatedUser()
                                             .Build();
                         opts.Filters.Add(new AuthorizeFilter(policy));
+                        opts.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                     })
                     // Fluent Validation doesn't work on 2.1 yet..
                     //.AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Startup>(); })

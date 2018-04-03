@@ -3,6 +3,7 @@ using MediatR;
 
 namespace cvtemplate.Features.Login
 {
+    // Have to use data annotations until FluentValidation works in 2.1..
     public class LoginCommand : IRequest
     {
         [Required]
