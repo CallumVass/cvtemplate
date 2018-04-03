@@ -56,8 +56,9 @@ namespace cvtemplate
             services.AddAutoMapper();
 
             services.AddIdentity<ApplicationUser, ApplicationRole>()
-                    .AddUserStore<ApplicationUserStore>()
-                    .AddRoleStore<ApplicationRoleStore>()
+                    //.AddEntityFrameworkStores<SomeContext>() // If using EF.. Else
+                    .AddUserStore<ApplicationUserStore>() // For custom store
+                    .AddRoleStore<ApplicationRoleStore>() // For custom store
                     .AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
