@@ -1,6 +1,7 @@
 {
+    "$schema": "http://json.schemastore.org/template",
     "author": "Callum Vass",
-    "classifications": [ "Web" ],
+    "classifications": ["Web"],
     "name": "Callum Starter Web",
     "identity": "Callum.StarterWeb",
     "shortName": "callumweb",
@@ -8,5 +9,5 @@
         "language": "C#"
     },
     "sourceName": "Callum.StarterWeb",
-    "preferNameDirectory" : "true"
-    }
+    "preferNameDirectory": true
+}
