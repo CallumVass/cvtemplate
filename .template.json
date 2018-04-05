@@ -1,0 +1,12 @@
+{
+    "author": "Callum Vass",
+    "classifications": [ "Web" ],
+    "name": "Callum Starter Web",
+    "identity": "Callum.StarterWeb",
+    "shortName": "callumweb",
+    "tags": {
+        "language": "C#"
+    },
+    "sourceName": "Callum.StarterWeb",
+    "preferNameDirectory" : "true"
+    }
